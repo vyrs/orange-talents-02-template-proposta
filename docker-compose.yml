@@ -163,6 +163,8 @@ services:
       DB_LOCAL: mysql
       DB_USERNAME: root
       DB_PASSWORD: W24QF85NFqd2
+      ANALISE_SERVICE: analise
+      CONTA_SERVICE: contas
       KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/proposta
       KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/proposta/protocol/openid-connect/certs
       AUTH_CLIENT_URL: http://keycloak:8080/auth/realms/proposta/protocol/openid-connect/token
