@@ -134,43 +134,43 @@ services:
       VAULT_TOKEN: ee413645-dbe8-4848-afc6-6bb2768ada75
       VAULT_ADDR: http://127.0.0.1:8200
 
-  mysql:
-    container_name: mysql
-    image: mysql:8.0
-    volumes:
-      - mysql-volume:/var/lib/mysql-proposta/data
-    ports:
-      - 3305:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: W24QF85NFqd2
-      MYSQL_PASSWORD: W24QF85NFqd2
-      MYSQL_DATABASE: proposta
-      MYSQL_ALLOW_EMPTY_PASSWORD: 1
-
-  proposta:
-    build:
-      dockerfile: Dockerfile
-      context: .
-    image: desafio/proposta
-    container_name: proposta
-    depends_on:
-      - mysql
-      - analise
-      - contas
-    ports:
-      - 8081:8080
-    environment:
-      DB_LOCAL: mysql
-      DB_USERNAME: root
-      DB_PASSWORD: W24QF85NFqd2
-      ANALISE_SERVICE: analise
-      CONTA_SERVICE: contas
-      KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/proposta
-      KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/proposta/protocol/openid-connect/certs
-      AUTH_CLIENT_URL: http://keycloak:8080/auth/realms/proposta/protocol/openid-connect/token
+#  mysql:
+#    container_name: mysql
+#    image: mysql:8.0
+#    volumes:
+#      - mysql-volume:/var/lib/mysql-proposta/data
+#    ports:
+#      - 3305:3306
+#    environment:
+#      MYSQL_ROOT_PASSWORD: W24QF85NFqd2
+#      MYSQL_PASSWORD: W24QF85NFqd2
+#      MYSQL_DATABASE: proposta
+#      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+#
+#  proposta:
+#    build:
+#      dockerfile: Dockerfile
+#      context: .
+#    image: desafio/proposta
+#    container_name: proposta
+#    depends_on:
+#      - mysql
+#      - analise
+#      - contas
+#    ports:
+#      - 8081:8080
+#    environment:
+#      DB_LOCAL: mysql
+#      DB_USERNAME: root
+#      DB_PASSWORD: W24QF85NFqd2
+#      ANALISE_SERVICE: analise
+#      CONTA_SERVICE: contas
+#      KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/proposta
+#      KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/proposta/protocol/openid-connect/certs
+#      AUTH_CLIENT_URL: http://keycloak:8080/auth/realms/proposta/protocol/openid-connect/token
 
 volumes:
   grafana-volume:
   prometheus-volume:
   postgres-volume:
-  mysql-volume:
+#  mysql-volume:

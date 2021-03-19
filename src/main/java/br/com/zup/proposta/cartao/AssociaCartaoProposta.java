@@ -39,7 +39,7 @@ public class AssociaCartaoProposta {
                     logger.info("Solicitando cartão para {}", proposta.getId());
 
                     CartaoRequest request = new CartaoRequest(proposta);
-                    CartaoResponse response = cartaoCliente.getCartao(request);
+                    CartaoResponse response = cartaoCliente.criaCartao(request);
                     Cartao cartao = response.toModel(proposta);
                     proposta.associaCartao(cartao);
                     propostaRepository.save(proposta);
