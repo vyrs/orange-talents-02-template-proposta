@@ -1,8 +1,10 @@
 package br.com.zup.proposta.cartao;
 
+import br.com.zup.proposta.avisoviagem.AvisoViagem;
 import br.com.zup.proposta.biometria.Biometria;
 import br.com.zup.proposta.bloqueio.Bloqueio;
-import br.com.zup.proposta.bloqueio.BloqueioResponse;
+import br.com.zup.proposta.carteira.Carteira;
+import br.com.zup.proposta.carteira.CarteirasEnum;
 import br.com.zup.proposta.proposta.Proposta;
 
 import javax.persistence.*;
@@ -42,6 +44,12 @@ public class Cartao {
 
     @OneToOne(mappedBy = "cartao")
     private Bloqueio bloqueio;
+
+    @OneToMany(mappedBy = "cartao")
+    private Set<AvisoViagem> avisoViagems;
+
+    @OneToMany(mappedBy = "cartao")
+    private Set<Carteira> carteiras;
 
     /**
      * @Deprecated for hibernate use only
@@ -86,6 +94,10 @@ public class Cartao {
 
     public StatusCartao getStatus() { return status; }
 
+    public Set<AvisoViagem> getAvisoViagems() { return avisoViagems; }
+
+    public Set<Carteira> getCarteiras() { return carteiras; }
+
     public void atualizaStatus(StatusCartao status) {
 
         if (status == null) throw new IllegalArgumentException("Status não pode ser null!");
@@ -94,4 +106,9 @@ public class Cartao {
     }
 
     public boolean bloqueado() {return this.status == StatusCartao.BLOQUEADO ;}
+
+    public boolean carteiraJaAssociada(CarteirasEnum carteiraEnum) {
+        return carteiras.stream()
+                .anyMatch(carteira -> carteira.getCarteiraEnum() == carteiraEnum);
+    }
 }

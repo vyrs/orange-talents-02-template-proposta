@@ -1,7 +1,7 @@
-package br.com.zup.proposta.bloqueio;
+package br.com.zup.proposta.avisoviagem;
 
+import br.com.zup.proposta.bloqueio.BloqueioController;
 import br.com.zup.proposta.cartao.Cartao;
-import br.com.zup.proposta.cartao.StatusCartao;
 import br.com.zup.proposta.cartao.integracao.CartaoCliente;
 import feign.FeignException;
 import org.slf4j.Logger;
@@ -16,10 +16,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/bloqueio")
-public class BloqueioController {
+@RequestMapping("/avisoviagem")
+public class AvisoViagemController {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -31,31 +32,50 @@ public class BloqueioController {
 
     @PostMapping("/{cartaoId}")
     @Transactional
-    public ResponseEntity<?> bloqueia(@PathVariable("cartaoId") Long cartaoId,
-                                      HttpServletRequest requestInfo,
-                                      @RequestHeader("user-agent") String agent) {
+    public ResponseEntity<?> cria(@PathVariable("cartaoId") Long cartaoId,
+                                  HttpServletRequest requestInfo,
+                                  @RequestBody @Valid AvisoViagemRequest request,
+                                  @RequestHeader("user-agent") String agent) {
 
         Cartao cartao = entityManager.find(Cartao.class, cartaoId);
-
-        if (cartao == null) return ResponseEntity.notFound().build();
-        if (cartao.bloqueado()) return ResponseEntity.unprocessableEntity().build();
+        if(cartao == null) return ResponseEntity.notFound().build();
 
         try {
-            logger.info("Iniciando tentatica de bloqueio do cartão {}", cartao.getNumeroCartao());
-            BloqueioResponse response = cartaoCliente.bloqueia(cartao.getNumeroCartao(), new BloqueioRequest("Proposta"));
-            StatusCartao status = response.toModel();
-            cartao.atualizaStatus(status);
+            logger.info("Iniciando criação de aviso de viagem, cartão {}", cartao.getNumeroCartao());
 
-            Bloqueio bloqueio = new Bloqueio(cartao, requestInfo.getRemoteAddr(), agent);
-            entityManager.persist(bloqueio);
+            AvisoViagemResponse response =  cartaoCliente.avisaViagem(cartao.getNumeroCartao(), request);
+            AvisoViagem avisoViagem = request.toModel(cartao, requestInfo.getRemoteAddr(), agent);
 
-            logger.info("Cartão {} bloqueado com sucesso!", cartao.getNumeroCartao());
-        }
-        catch (FeignException e) {
-            return ResponseEntity.unprocessableEntity().build();
+            if(response.criado()) entityManager.persist(avisoViagem);
+            logger.info(" Aviso de viagem para o Cartão {} criado com sucesso!", cartao.getNumeroCartao());
+
+        } catch (FeignException e) {
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Um erro Inesperado aconteceu!");
         }
         return ResponseEntity.ok().build();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

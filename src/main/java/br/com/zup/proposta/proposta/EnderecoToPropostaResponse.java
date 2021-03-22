@@ -1,8 +1,5 @@
 package br.com.zup.proposta.proposta;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotBlank;
-
 public class EnderecoToPropostaResponse {
 
     private String logradouro;

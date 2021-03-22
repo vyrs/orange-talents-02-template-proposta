@@ -1,7 +1,7 @@
 package br.com.zup.proposta.proposta;
 
 import br.com.zup.proposta.cartao.Cartao;
-import br.com.zup.proposta.cartao.integracao.CartaoResponse;
+import org.springframework.security.crypto.encrypt.Encryptors;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -20,6 +20,10 @@ public class Proposta {
     @NotBlank
     @Column(nullable = false, unique = true)
     private String documento;
+
+    @NotBlank
+    @Column(nullable = false, unique = true)
+    private String documentoEncript;
 
     @NotBlank
     @Column(nullable = false)
@@ -62,6 +66,7 @@ public class Proposta {
         this.nome = nome;
         this.salario = salario;
         this.endereco = endereco;
+        this.documentoEncript = Encryptors.text("abcabc", "cbacba").encrypt(documento);
     }
 
     public Long getId() {
@@ -101,6 +106,8 @@ public class Proposta {
     }
 
     public Cartao getCartao() { return cartao; }
+
+    public String getDocumentoEncript() { return documentoEncript; }
 
     public void atualizaStatus(StatusProposta status) {
 

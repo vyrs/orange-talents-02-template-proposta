@@ -1,6 +1,5 @@
 package br.com.zup.proposta.proposta;
 
-import br.com.zup.proposta.cartao.Cartao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +15,4 @@ public interface PropostaRepository extends JpaRepository<Proposta, Long> {
     List<Proposta> findFirst10ByStatusOrderByDataCriacao(StatusProposta status);
 
     List<Proposta> findFirst10ByStatusAndCartaoIsNullOrderByDataCriacao(StatusProposta elegivel);
-
-    //List<Proposta> findFirst10ByStatusAndCartaoOrderByDataCriacaoDesc(StatusProposta status)
 }

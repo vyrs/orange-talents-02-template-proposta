@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -42,7 +43,7 @@ public class PropostaController {
             pendentes.forEach(proposta -> {
                 StatusProposta status = enviaParaAnalise(proposta);
                 proposta.atualizaStatus(status);
-                logger.info("Proposta documento={} atualizada com sucesso!", proposta.getDocumento());
+                logger.info("Proposta documento={} atualizada com sucesso!", Encryptors.text("abcabc", "cbacba").decrypt(proposta.getDocumentoEncript()));
             });
         }
     }
